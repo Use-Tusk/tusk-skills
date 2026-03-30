@@ -12,7 +12,7 @@ You are performing local deviation analysis for Tusk Drift. Your job is to analy
 Try running against Tusk Drift Cloud first:
 
 ``` bash
-tusk drift run --cloud --agent --print
+tusk drift run --cloud --save-results agent --print
 ```
 
 **If the command fails with an authentication error** (e.g., `Error: not authenticated. Run tusk auth login or set TUSK_API_KEY`):
@@ -25,10 +25,10 @@ tusk drift run --cloud --agent --print
 3. If the user wants to replay local traces, drop the `--cloud` flag for **all** subsequent `tusk drift run` commands in this session:
 
    ``` bash
-   tusk drift run --agent --print
+   tusk drift run --save-results agent --print
    ```
 
-Capture the output directory path printed to stderr (e.g., `.tusk/logs/agent-run-20260329-140532/`).
+Capture the output directory path printed to stderr (e.g., `.tusk/results/run-20260329-140532/`).
 
 ---
 
@@ -179,7 +179,7 @@ For each UNINTENDED deviation:
 Re-run the specific test (drop `--cloud` if replaying local traces):
 
 ``` bash
-tusk drift run --cloud --agent --print --trace-id {deviation_id}
+tusk drift run --cloud --save-results agent --print --trace-id {deviation_id}
 ```
 
 ### 5c. Evaluate the result
