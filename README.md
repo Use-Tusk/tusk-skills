@@ -6,7 +6,7 @@ Agent skills for [Tusk](https://usetusk.ai) — add AI-powered testing workflows
 
 Tusk Skills are portable AI agent instructions that integrate Tusk's automated testing capabilities directly into your development workflow. Each skill teaches your AI coding assistant (Cursor, Claude Code, etc.) how to perform a specific Tusk task — like analyzing API test deviations, debugging regressions, or triaging failures — without leaving your editor.
 
-This repository is the official skill registry for Tusk. Install any skill and your agent will know how to use it immediately.
+This repository is the official skill registry for Tusk.
 
 ## Install
 
@@ -40,11 +40,9 @@ npx skills add Use-Tusk/tusk-skills -a claude-code -a cursor
 
 3. Ask your agent to analyze drift deviations:
 
+   ``` bash
+   Run my Tusk Drift tests and analyze the deviations.
    ```
-   /tusk-drift-analyze
-   ```
-
-   Or just ask naturally — e.g., *"Run my Tusk Drift tests and analyze the deviations."*
 
 ## Available Skills
 
@@ -54,10 +52,10 @@ npx skills add Use-Tusk/tusk-skills -a claude-code -a cursor
 
 ## Related Links
 
-- [Tusk CLI](https://github.com/Use-Tusk/tusk-cli) — Record and replay API tests
-- [Tusk Drift Python SDK](https://github.com/Use-Tusk/drift-python-sdk) — Python SDK for capturing and replaying API calls
-- [Tusk Drift Node.js SDK](https://github.com/Use-Tusk/drift-node-sdk) — Node.js SDK for capturing and replaying API calls
-- [Tusk Documentation](https://docs.usetusk.ai) — Full documentation
+- [Tusk CLI](https://github.com/Use-Tusk/tusk-cli)
+- [Tusk Drift Python SDK](https://github.com/Use-Tusk/drift-python-sdk)
+- [Tusk Drift Node.js SDK](https://github.com/Use-Tusk/drift-node-sdk)
+- [Tusk Documentation](https://docs.usetusk.ai)
 
 ## License
 

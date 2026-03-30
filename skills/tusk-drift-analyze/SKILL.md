@@ -9,11 +9,24 @@ You are performing local deviation analysis for Tusk Drift. Your job is to analy
 
 ## Phase 1: Run Tests and Collect Deviations
 
-Run the Tusk Drift CLI with the `--agent` flag to produce deviation files:
+Try running against Tusk Drift Cloud first:
 
 ``` bash
 tusk drift run --cloud --agent --print
 ```
+
+**If the command fails with an authentication error** (e.g., `Error: not authenticated. Run tusk auth login or set TUSK_API_KEY`):
+
+1. Tell the user they need to authenticate and give them two options:
+   - Run `tusk auth login` to authenticate interactively
+   - Set the `TUSK_API_KEY` environment variable
+2. Check if local traces exist at `.tusk/traces/`. If trace files are present, ask the user:
+   > You're not authenticated with Tusk Drift Cloud, but I found local traces in `.tusk/traces/`. Would you like to replay those instead?
+3. If the user wants to replay local traces, drop the `--cloud` flag for **all** subsequent `tusk drift run` commands in this session:
+
+   ``` bash
+   tusk drift run --agent --print
+   ```
 
 Capture the output directory path printed to stderr (e.g., `.tusk/logs/agent-run-20260329-140532/`).
 
@@ -129,7 +142,7 @@ For each deviation, produce:
 
 After analyzing all deviations, present a summary table:
 
-```
+``` markdown
 ## Deviation Analysis Summary
 
 | # | Endpoint | Classification | Confidence | Root Cause |
@@ -163,8 +176,9 @@ For each UNINTENDED deviation:
 
 ### 5b. Verify the fix
 
-Re-run the specific test:
-```
+Re-run the specific test (drop `--cloud` if replaying local traces):
+
+``` bash
 tusk drift run --cloud --agent --print --trace-id {deviation_id}
 ```
 
@@ -189,7 +203,7 @@ After re-running, read the new output and determine the outcome:
 
 Present a summary of fix outcomes:
 
-```
+``` markdown
 ## Fix Results
 
 | # | Endpoint | Outcome | Details |
