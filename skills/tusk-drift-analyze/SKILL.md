@@ -17,8 +17,6 @@ tusk drift run --cloud --agent --print
 
 Capture the output directory path printed to stderr (e.g., `.tusk/logs/agent-run-20260329-140532/`).
 
-If tests are already run and the user provides an existing agent output directory, skip this step.
-
 ---
 
 ## Phase 2: Read and Understand Deviations
@@ -184,7 +182,7 @@ After re-running, read the new output and determine the outcome:
 ### 5d. Iterate if needed
 
 - Max **3 fix attempts** per deviation before giving up
-- If the same deviation persists after 2 different fix approaches, stop and tell the user to investigate manually
+- **Early stop**: if the same deviation persists unchanged after 2 different fix approaches, stop early — the issue is likely a mock gap or environment factor, not a code bug. Don't use the third attempt.
 - If a fix resolves one deviation but introduces a new one, flag it and stop
 
 ### 5e. Report fix results
