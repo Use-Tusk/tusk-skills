@@ -49,6 +49,7 @@ npx skills add Use-Tusk/tusk-skills -a claude-code -a cursor
 | Skill | Description |
 |-------|-------------|
 | **[tusk-drift-analyze](skills/tusk-drift-analyze/SKILL.md)** | Analyze Tusk Drift API test deviations locally — classifies deviations as intended, unintended, or unrelated, and optionally fixes regressions. |
+| **[tusk-drift-query](skills/tusk-drift-query/SKILL.md)** | Search, analyze, and debug recorded API traffic using the Tusk Drift CLI query commands. |
 
 ## Related Links
 
