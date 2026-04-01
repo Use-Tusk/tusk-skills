@@ -1,5 +1,5 @@
 ---
-name: drift-analyze
+name: tusk-drift-analyze
 description: Analyze Tusk Drift API test deviations locally — classifies deviations as intended, unintended, or unrelated, and optionally fixes regressions.
 ---
 
@@ -11,7 +11,7 @@ You are performing local deviation analysis for Tusk Drift. Your job is to analy
 
 Try running against Tusk Drift Cloud first:
 
-``` bash
+```bash
 tusk drift run --cloud --save-results agent --print
 ```
 
@@ -24,7 +24,7 @@ tusk drift run --cloud --save-results agent --print
    > You're not authenticated with Tusk Drift Cloud, but I found local traces in `.tusk/traces/`. Would you like to replay those instead?
 3. If the user wants to replay local traces, drop the `--cloud` flag for **all** subsequent `tusk drift run` commands in this session:
 
-   ``` bash
+   ```bash
    tusk drift run --save-results agent --print
    ```
 
@@ -39,12 +39,13 @@ Capture the output directory path printed to stderr (e.g., `.tusk/results/run-20
 2. **If there are no deviations**, report that all tests passed and stop.
 
 3. **Determine the base branch:**
+
    - Check `index.md` for a `Base Branch:` line. If present, use that value.
    - If not present, fall back: try `main`, then `master` (check which exists with `git rev-parse --verify`).
 
 4. **Get the PR diff** to understand what this branch changed:
 
-   ``` bash
+   ```bash
    git diff <base-branch>...HEAD --stat
    git diff <base-branch>...HEAD
    ```
@@ -96,12 +97,12 @@ Read the full `.md` file. Pay attention to:
 
 Assign one of these types:
 
-| Type | Meaning |
-|------|---------|
-| **INTENDED** | The deviation directly aligns with what the PR is changing. Example: PR adds a `verification_required` field, and the deviation shows that field appearing in the response. |
-| **UNINTENDED** | The deviation looks like a regression not matching the PR's intent. Example: PR refactors auth middleware, and an unrelated endpoint starts returning 500. |
-| **UNRELATED** | The deviation is caused by environmental factors, mock issues, or flaky behavior unrelated to PR changes. |
-| **UNKNOWN** | Cannot determine with available information. |
+| Type           | Meaning                                                                                                                                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **INTENDED**   | The deviation directly aligns with what the PR is changing. Example: PR adds a `verification_required` field, and the deviation shows that field appearing in the response. |
+| **UNINTENDED** | The deviation looks like a regression not matching the PR's intent. Example: PR refactors auth middleware, and an unrelated endpoint starts returning 500.                  |
+| **UNRELATED**  | The deviation is caused by environmental factors, mock issues, or flaky behavior unrelated to PR changes.                                                                   |
+| **UNKNOWN**    | Cannot determine with available information.                                                                                                                                |
 
 ### 3d. Apply these heuristics
 
@@ -142,14 +143,14 @@ For each deviation, produce:
 
 After analyzing all deviations, present a summary table:
 
-``` markdown
+```markdown
 ## Deviation Analysis Summary
 
-| # | Endpoint | Classification | Confidence | Root Cause |
-|---|----------|---------------|------------|------------|
-| 1 | POST /api/v1/users | INTENDED | HIGH | PR adds verification_required field to user creation response |
-| 2 | GET /api/v1/orders | UNRELATED | HIGH | Mock not found for shipping-service; missing mock, not a code bug |
-| 3 | PUT /api/v1/settings | UNINTENDED | MEDIUM | Auth middleware refactor broke header propagation in settings handler |
+| #   | Endpoint             | Classification | Confidence | Root Cause                                                            |
+| --- | -------------------- | -------------- | ---------- | --------------------------------------------------------------------- |
+| 1   | POST /api/v1/users   | INTENDED       | HIGH       | PR adds verification_required field to user creation response         |
+| 2   | GET /api/v1/orders   | UNRELATED      | HIGH       | Mock not found for shipping-service; missing mock, not a code bug     |
+| 3   | PUT /api/v1/settings | UNINTENDED     | MEDIUM     | Auth middleware refactor broke header propagation in settings handler |
 ```
 
 Then provide detailed analysis for each deviation.
@@ -178,7 +179,7 @@ For each UNINTENDED deviation:
 
 Re-run the specific test (drop `--cloud` if replaying local traces):
 
-``` bash
+```bash
 tusk drift run --cloud --save-results agent --print --trace-id {deviation_id}
 ```
 
@@ -186,12 +187,12 @@ tusk drift run --cloud --save-results agent --print --trace-id {deviation_id}
 
 After re-running, read the new output and determine the outcome:
 
-| Outcome | Meaning | Action |
-|---------|---------|--------|
-| **FIXED** | Test passes now | Report success, move to next deviation |
-| **DEVIATION_IDENTICAL** | Same deviation persists after fix | The code change had no effect. Likely a mock gap or environmental issue. Stop and reclassify as UNRELATED/UNFIXABLE. |
-| **DEVIATION_CHANGED** | Different deviation now | Assess whether new deviation is a separate issue. Report it, don't chase it. |
-| **NEW_DEVIATION** | Original fixed but new one appeared | Flag the new deviation as separate. Don't chase it in this loop. |
+| Outcome                 | Meaning                             | Action                                                                                                               |
+| ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **FIXED**               | Test passes now                     | Report success, move to next deviation                                                                               |
+| **DEVIATION_IDENTICAL** | Same deviation persists after fix   | The code change had no effect. Likely a mock gap or environmental issue. Stop and reclassify as UNRELATED/UNFIXABLE. |
+| **DEVIATION_CHANGED**   | Different deviation now             | Assess whether new deviation is a separate issue. Report it, don't chase it.                                         |
+| **NEW_DEVIATION**       | Original fixed but new one appeared | Flag the new deviation as separate. Don't chase it in this loop.                                                     |
 
 ### 5d. Iterate if needed
 
@@ -203,13 +204,13 @@ After re-running, read the new output and determine the outcome:
 
 Present a summary of fix outcomes:
 
-``` markdown
+```markdown
 ## Fix Results
 
-| # | Endpoint | Outcome | Details |
-|---|----------|---------|---------|
-| 1 | PUT /api/v1/settings | FIXED | Fixed header propagation in auth middleware |
-| 2 | DELETE /api/v1/cache | UNFIXABLE_MOCK_ISSUE | Deviation caused by missing mock for cache-service, not a code bug |
+| #   | Endpoint             | Outcome              | Details                                                            |
+| --- | -------------------- | -------------------- | ------------------------------------------------------------------ |
+| 1   | PUT /api/v1/settings | FIXED                | Fixed header propagation in auth middleware                        |
+| 2   | DELETE /api/v1/cache | UNFIXABLE_MOCK_ISSUE | Deviation caused by missing mock for cache-service, not a code bug |
 ```
 
 Outcome values:
