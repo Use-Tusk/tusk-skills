@@ -1,6 +1,7 @@
 ---
 name: tusk-drift-query
 description: Search, analyze, and debug recorded API traffic using the Tusk Drift CLI query commands. Use when users want to explore their API endpoints, investigate errors or latency, trace requests, or understand traffic patterns.
+allowed-tools: Bash(tusk drift query:*)
 ---
 
 Search and analyze API traffic span recordings from Tusk Drift using CLI commands.
