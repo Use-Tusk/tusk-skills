@@ -1,6 +1,7 @@
 ---
 name: tusk-drift-analyze
 description: Analyze Tusk Drift API test deviations locally — classifies deviations as intended, unintended, or unrelated, and optionally fixes regressions.
+allowed-tools: Bash(tusk drift run:*), Bash(git diff:*), Bash(git rev-parse:*)
 ---
 
 You are performing local deviation analysis for Tusk Drift. Your job is to analyze API test deviations, classify them, and optionally fix regressions.
